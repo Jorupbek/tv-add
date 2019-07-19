@@ -1,7 +1,5 @@
 body {
-    background-image: url(../images/img2.jpg);
-    background-size: cover;
-    background-position: 50% 50%;
+   background: #eee;
 }
 
 header {
@@ -46,7 +44,7 @@ select#id_choice {
 }
 
 table{
-    margin: 3rem 10px;
+    margin: 0px;
     text-align: center;
 }
 
@@ -54,11 +52,26 @@ tbody {
     font-size: 14px;
 }
 
-.table th, .table td {
-    padding: .50rem;
-    vertical-align: top;
+table tr, table td {
+    padding: .30rem !important;
     border-top: 1px solid #dee2e6;
-    line-height: 10px;
+    line-height: 18px;
     border-left: 1px solid #b3aaaa;
     border-right: 1px solid #b3aaaa;
+}
+
+/*footer {*/
+/*    position: absolute;*/
+/*    bottom: 40px;*/
+/*}*/
+nav.left-nav {
+    position: absolute;
+    bottom: -46px;
+    left: 600px;
+}
+
+.btn-toolbar.rigt-nav {
+    position: inherit;
+    left: 1000px;
+    bottom: -30px;
 }

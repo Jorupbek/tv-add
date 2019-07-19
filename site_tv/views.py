@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, ListView
 from site_tv.forms import CreateField
@@ -9,6 +10,19 @@ from django.shortcuts import redirect, render
 class SubPostListView(LoginRequiredMixin, ListView):
     queryset = Post.objects.all()
     template_name = 'post_list.html'
+    context_object_name = 'articles'
+
+    def get_queryset(self):
+        articles = Post.objects.all()
+        paginator = Paginator(articles, 14)
+        page = self.request.GET.get('page')
+        try:
+            articles = paginator.page(page)
+        except PageNotAnInteger:
+            articles = paginator.page(1)
+        except EmptyPage:
+            articles = paginator.page(paginator.num_pages)
+        return articles
 
 
 class SubAgent(LoginRequiredMixin, CreateView):
@@ -33,29 +47,26 @@ def addTodo(request):
             a = request.POST['date']
             c = request.POST['text']
             b = request.POST['choice']
-            post=Post.objects.create(
-                 post_dates=a, text=c, choice=Choice.objects.get(pk=b)
-             )
+            post = Post.objects.create(
+                post_dates=a, text=c, choice=Choice.objects.get(pk=b)
+            )
             post.save()
             # return render(request, 'test.html', {'form': post})
             return redirect('post_list')
         else:
             print('ERROR')
     return render(request, 'main.html', {'form': form})
- 
+
 
 def completeTodo(request, todo_id):
     todo = Post.objects.get(pk=todo_id)
-    todo.complete = True
+    if todo.complete == False:
+        todo.complete = True
+    else:
+        todo.complete = False
     todo.save()
     return redirect('post_list')
 
-
-def uncompleteTodo(request, todo_id):
-    todo = Post.objects.get(pk=todo_id)
-    todo.complete = False
-    todo.save()
-    return redirect('post_list')
 
 
 def deleteCompleted(request):
@@ -65,4 +76,14 @@ def deleteCompleted(request):
 
 def deleteAll(request):
     Post.objects.all().delete()
+    return redirect('post_list')
+
+
+def changeStatus(request, todo_id):
+    todo = Post.objects.get(pk=todo_id)
+    if todo.reception == False:
+        todo.reception = True
+    else:
+        todo.reception = False
+    todo.save()
     return redirect('post_list')
